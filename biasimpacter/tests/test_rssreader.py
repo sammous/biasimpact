@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 @pytest.fixture
 def rss_feed():
     datapath = os.path.join(os.path.dirname(__file__), "data")
-    with open(os.path.join(datapath, 'rssfeed_20mins.txt'), 'r') as f:
+    with open(os.path.join(datapath, 'rss-20mins.xml'), 'r') as f:
         return f.read()
 
 @pytest.fixture
@@ -26,7 +26,7 @@ def test_date():
 def test_validator():
     assert Validator
 
-@patch('app.prepare.requests.get')
+@patch('app.dataprovider.requests.get')
 def test_rssreader(_mock_get, rss_feed, app):
     mock_resp = _mock_response(content=rss_feed)
     _mock_get.return_value = mock_resp

@@ -1,4 +1,4 @@
-from app.prepare import Date, Validator, RSSReader
+from app.dataprovider import Date, Validator, RSSReader
 from flask import Flask
 from flask_restplus import Resource, Api
 import pyrebase

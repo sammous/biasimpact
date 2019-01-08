@@ -66,7 +66,7 @@ class RSSReader(Validator, Date, ElementsXML):
     def get_xml_feed(self, url):
         try:
             page = requests.get(url, headers=self.header)
-            soup = BeautifulSoup(page.text[0], "xml")
+            soup = BeautifulSoup(page.text, "xml")
         except requests.exceptions.RequestException as e:
             self.app.logger.error(e)
 
