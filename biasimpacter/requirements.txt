@@ -6,3 +6,6 @@ flask-restplus
 beautifulsoup4
 mock
 lxml
+schedule
+flask_pymongo
+python-dateutil
