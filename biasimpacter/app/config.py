@@ -4,11 +4,7 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-    FIREBASE_PROJECTID = "projectId"
-    FIREBASE_APIKEY = "apiKey"
-    FIREBASE_AUTHDOMAIN = "{}.firebaseapp.com".format(FIREBASE_PROJECTID)
-    FIREBASE_DATABASEURL = "https://databaseName.firebaseio.com"
-    FIREBASE_STORAGEBUCKET = "projectId.appspot.com"
+    MONGO_URI = "mongodb://localhost:27017/biasimpact"
 
 
 class DevelopmentConfig(Config):
@@ -17,8 +13,3 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    FIREBASE_PROJECTID = "projectId"
-    FIREBASE_APIKEY = "XXX"
-    FIREBASE_AUTHDOMAIN = "{}.firebaseapp.com".format(FIREBASE_PROJECTID)
-    FIREBASE_DATABASEURL = "https://databaseName.firebaseio.com"
-    FIREBASE_STORAGEBUCKET = "projectId.appspot.com"

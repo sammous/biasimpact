@@ -133,7 +133,7 @@ class RSSReader(Validator, Date, ElementsXML):
             soup = BeautifulSoup(page.text, "xml")
         except requests.exceptions.RequestException as e:
             self.app.logger.error(e)
-
+            return
         items = self._get_items(soup, self.items)
         items_soup = list(map(lambda x: BeautifulSoup(str(x), "xml"), items))
         desc = self.empty_to_nones(self._get_desc(
@@ -164,7 +164,6 @@ class StoryRSS(RSSReader):
         self.app = app
 
     def save_story(self):
-        print(self.rss)
         try:
             element = self.rss['feedElement']
             desc_element = self.rss['feedDescElement']
@@ -178,9 +177,9 @@ class StoryRSS(RSSReader):
                     "desc": str(desc) if desc else None,
                     "title": str(title) if title else None,
                     "link": str(link) if link else None,
-                    "date_parsed": datetime.datetime.utcnow()
+                    "date_parsed": datetime.datetime.utcnow(),
+                    "media": self.name,
                 }
-                self.database.rss.insert_one(data)
-                self.app.logger.debug("inserting data")
+                self.database.rss_feed.insert_one(data)
         except Exception as e:
             self.app.logger.debug(e)

@@ -1,0 +1,18 @@
+version: '3.1'
+services:
+  mongo:
+    image: mongo
+    container_name: "mongodb"
+    ports:
+      - "27017:27017"
+    volumes:
+      - .:/data/db
+  biasimpacter:
+    container_name: biasimpacter
+    build:
+      context: ./biasimpacter
+    entrypoint: sh /biasimpacter/crontab.sh
+    depends_on: 
+      - mongo
+    volumes:
+      - .:/biasimpacter
