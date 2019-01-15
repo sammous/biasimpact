@@ -1,6 +1,5 @@
 requests
 pytest
-pyrebase
 flask
 flask-restplus
 beautifulsoup4

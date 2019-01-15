@@ -1,8 +1,7 @@
-from app.dataprovider import Date, Validator, RSSReader, StoryRSS
+from dataprovider import Date, Validator, RSSReader, StoryRSS
 from flask import Flask
 from threading import Thread
 from flask_pymongo import PyMongo
-import pyrebase
 import schedule
 import time
 import json
@@ -16,18 +15,6 @@ def create_app(test_config=False):
         app.config.from_object('config.ProductionConfig')
     return app
 
-
-def jobs(app, database):
-    print('Running job..')
-    urls = [("20mins", "https://www.20minutes.fr/feeds/rss-une.xml")]
-    for name, url in urls:
-        story = StoryRSS(app, name, url, database)
-        story.save_story()
-
-def run_schedule():
-    while 1:
-        schedule.run_pending()
-        time.sleep(1)
 
 if __name__ == "__main__":
     app = create_app()

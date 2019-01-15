@@ -1,0 +1,1 @@
+* * * * * python /biasimpacter/biasimpacter/app/app.py >> /biasimpacter/logs/crontab.log 2>&1
