@@ -1,5 +1,6 @@
 #coding: utf-8
 import requests
+import logging
 import datetime
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
@@ -35,11 +36,9 @@ class Validator:
     valid = True
 
 class RSSReader(Validator, Date, ElementsXML):
-    def __init__(self, app, language='fr', header={"User-Agent": "Mozilla/5.0"}):
-        self.app = app
+    def __init__(self, language='fr', header={"User-Agent": "Mozilla/5.0"}):
         self.language = language
         self.header = header
-        self.app.logger.debug('Initializing RSSReader...')
         self.items = ElementsXML.ITEMS
         self.items_date = ElementsXML.ITEMS_DATE
         self.items_desc = ElementsXML.ITEMS_DESC
@@ -132,8 +131,7 @@ class RSSReader(Validator, Date, ElementsXML):
             page = requests.get(url, headers=self.header)
             soup = BeautifulSoup(page.text, "xml")
         except requests.exceptions.RequestException as e:
-            self.app.logger.error(e)
-            return
+            logging.error(e)
         items = self._get_items(soup, self.items)
         items_soup = list(map(lambda x: BeautifulSoup(str(x), "xml"), items))
         desc = self.empty_to_nones(self._get_desc(
@@ -155,13 +153,13 @@ class RSSReader(Validator, Date, ElementsXML):
         }
 
 class StoryRSS(RSSReader):
-    def __init__(self, app, name, url, database,
+    def __init__(self, name, url, database,
                 language='fr', header={"User-Agent": "Mozilla/5.0"}):
+        super().__init__(self)
         self.url = url
         self.name = name
         self.database = database
-        self.rss = RSSReader(app=app,language=language, header=header).get_xml_feed(url)
-        self.app = app
+        self.rss = self.get_xml_feed(url)
 
     def save_story(self):
         try:
@@ -170,6 +168,7 @@ class StoryRSS(RSSReader):
             date_element = self.rss['feedDateElement']
             link_element = self.rss['feedLinkElement']
             title_element = self.rss['feedTitleElement']
+            n = 0
             for el, desc, date, title, link in zip(element, desc_element, date_element, title_element, link_element):
                 data = {
                     "raw_item": str(el) if el else None,
@@ -180,6 +179,8 @@ class StoryRSS(RSSReader):
                     "date_parsed": datetime.datetime.utcnow(),
                     "media": self.name,
                 }
-                self.database.rss_feed.insert_one(data)
+                self.database.rss_feed.insert_one(data).result
+                n += 1
+            logging.info("Inserted {} documents for {}.".format(n, self.name))
         except Exception as e:
-            self.app.logger.debug(e)
+            logging.debug(e)

@@ -1,24 +1,36 @@
 from dataprovider import Date, Validator, RSSReader, StoryRSS
-from flask import Flask
+from models import ModelRSS
 from threading import Thread
-from flask_pymongo import PyMongo
+import logging
 import schedule
 import time
 import json
+import os
 
 
-def create_app(test_config=False):
-    app = Flask(__name__)
-    if test_config:
-        app.config.from_object('config.TestingConfig')
-    else:
-        app.config.from_object('config.ProductionConfig')
-    return app
+logging.basicConfig(filename=os.getenv("BIASIMPACTER_OUTPUT"), 
+                    level=logging.INFO, 
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+logging.getLogger().addHandler(logging.StreamHandler())
 
+
+def set_up_mongo():
+    try:
+        mongo_host = os.getenv("BIASIMPACTER_DC_MONGO_HOST")
+        mongo_port = os.getenv("MONGO_PORT")
+        mongo_db = os.getenv("APP_MONGO_DB")
+        mongo_user = os.getenv("APP_MONGO_USER")
+        mongo_pw = os.getenv("APP_MONGO_PASS")
+        mongo_uri = "mongodb://{}:{}@{}:{}/{}".format(
+            mongo_user, mongo_pw, mongo_host, mongo_port, mongo_db)
+        logging.info(mongo_uri)
+        return  mongo_uri
+    except Exception() as e:
+        logging.error(e)
 
 if __name__ == "__main__":
-    app = create_app()
-    mongo = PyMongo(app)
+    uri = set_up_mongo()
+    mongo = ModelRSS(uri).client
     urls = [
         ("20minutes_fr", "https://www.20minutes.fr/feeds/rss-une.xml"),
         ("atlantico_fr", "http://www.atlantico.fr/rss.xml"),
@@ -87,6 +99,9 @@ if __name__ == "__main__":
         ("regards_fr", "http://www.regards.fr/spip.php?page=backend"),
     ]
     for name, url in urls:
-        story = StoryRSS(app, name, url, mongo.db)
-        story.save_story()
-    app.run(debug=True)
+        try:
+            logging.info("Reading story: {}".format(name))
+            story = StoryRSS(logging, name, url, mongo.database)
+            story.save_story()
+        except Exception as e:
+            logging.error(e)

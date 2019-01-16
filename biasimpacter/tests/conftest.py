@@ -1,5 +1,4 @@
 import pytest
-from app import create_app, config
 from mock import patch, Mock, MagicMock
 
 
@@ -31,8 +30,3 @@ def _mock_response(
             return_value=json_data
         )
     return mock_resp
-
-
-@pytest.fixture
-def app():
-    yield create_app(test_config=True)

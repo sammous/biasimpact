@@ -4,7 +4,7 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-    MONGO_URI = "mongodb://mongo:27017/biasimpact"
+    PROD = True
 
 
 class DevelopmentConfig(Config):
