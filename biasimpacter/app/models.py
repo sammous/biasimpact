@@ -9,9 +9,15 @@ class ModelMongo:
 
 
 class ModelRSS(ModelMongo):
-    def build_index(self, collection):
+    def __init__(self, uri, database='biasimpact', collection='rss_feed'):
+        self.client = MongoClient(uri)
+        self.database = self.client[database]
+        self.collection = self.client[database][collection]
+        self.build_index()
+
+    def build_index(self):
         indexes_model = [
             IndexModel([("media", ASCENDING)]),
             IndexModel([("link", ASCENDING)], unique=True)
         ]
-        self.client.database.collection.create_indexes(indexes_model)
+        self.collection.create_indexes(indexes_model)

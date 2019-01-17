@@ -128,6 +128,7 @@ class RSSReader(Validator, Date, ElementsXML):
         Format RSS feed and extract items and its information.
         """
         try:
+            print(url)
             page = requests.get(url, headers=self.header)
             soup = BeautifulSoup(page.text, "xml")
         except requests.exceptions.RequestException as e:
@@ -153,13 +154,14 @@ class RSSReader(Validator, Date, ElementsXML):
         }
 
 class StoryRSS(RSSReader):
-    def __init__(self, name, url, database,
+    def __init__(self, name, url, connection,
                 language='fr', header={"User-Agent": "Mozilla/5.0"}):
         super().__init__(self)
         self.url = url
         self.name = name
-        self.database = database
         self.rss = self.get_xml_feed(url)
+        self.connection = connection
+        self.connection.build_index()
 
     def save_story(self):
         try:
@@ -179,8 +181,9 @@ class StoryRSS(RSSReader):
                     "date_parsed": datetime.datetime.utcnow(),
                     "media": self.name,
                 }
-                self.database.rss_feed.insert_one(data).result
+                self.connection.database.rss_feed.insert_one(data)
                 n += 1
-            logging.info("Inserted {} documents for {}.".format(n, self.name))
+            logging.info(
+                "Inserted {}/{} documents for {}.".format(n, len(element), self.name))
         except Exception as e:
-            logging.debug(e)
+            logging.error(e)

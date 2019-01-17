@@ -1,5 +1,5 @@
-from dataprovider import Date, Validator, RSSReader, StoryRSS
-from models import ModelRSS
+from .dataprovider import Date, Validator, RSSReader, StoryRSS
+from .models import ModelRSS
 from threading import Thread
 import logging
 import schedule
@@ -30,7 +30,7 @@ def set_up_mongo():
 
 if __name__ == "__main__":
     uri = set_up_mongo()
-    mongo = ModelRSS(uri).client
+    mongo_rss = ModelRSS(uri)
     urls = [
         ("20minutes_fr", "https://www.20minutes.fr/feeds/rss-une.xml"),
         ("atlantico_fr", "http://www.atlantico.fr/rss.xml"),
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     for name, url in urls:
         try:
             logging.info("Reading story: {}".format(name))
-            story = StoryRSS(logging, name, url, mongo.database)
+            story = StoryRSS(name, url, mongo_rss)
             story.save_story()
         except Exception as e:
             logging.error(e)
