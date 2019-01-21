@@ -10,7 +10,7 @@ chmod a+x /usr/bin/python
 # Warning: 
 # crontab uses its own env, you need to export .env file so script
 # can access variables
-echo "* * * * * export $(cat /biasimpacter/.env | xargs); cd /biasimpacter/biasimpacter && /usr/local/bin/python /biasimpacter/biasimpacter/app/app.py >> /var/log/crontab.log 2>&1
+echo "0 8 * * * export $(cat /biasimpacter/.env | xargs); cd /biasimpacter/biasimpacter && /usr/local/bin/python /biasimpacter/biasimpacter/app/app.py >> /var/log/crontab.log 2>&1
 " > /etc/crontab
 
 # Registering the new crontab
