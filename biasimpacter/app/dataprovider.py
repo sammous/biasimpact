@@ -1,4 +1,3 @@
-#coding: utf-8
 import requests
 import logging
 import datetime
@@ -154,14 +153,18 @@ class RSSReader(Validator, Date, ElementsXML):
         }
 
 class StoryRSS(RSSReader):
-    def __init__(self, name, url, connection,
+    """
+    Aggregate data from RSSReader to save structured feeds to MongoDB.
+    """
+    def __init__(self, name, url, mongo,
                 language='fr', header={"User-Agent": "Mozilla/5.0"}):
-        super().__init__(self)
+        super().__init__(language=language, header=header)
         self.url = url
         self.name = name
         self.rss = self.get_xml_feed(url)
-        self.connection = connection
-        self.connection.build_index()
+        self.mongo = mongo
+
+        self.mongo.build_index()
 
     def save_story(self):
         try:
@@ -170,7 +173,7 @@ class StoryRSS(RSSReader):
             date_element = self.rss['feedDateElement']
             link_element = self.rss['feedLinkElement']
             title_element = self.rss['feedTitleElement']
-            n = 0
+            insertion = 0
             for el, desc, date, title, link in zip(element, desc_element, date_element, title_element, link_element):
                 data = {
                     "raw_item": str(el) if el else None,
@@ -181,9 +184,9 @@ class StoryRSS(RSSReader):
                     "date_parsed": datetime.datetime.utcnow(),
                     "media": self.name,
                 }
-                self.connection.database.rss_feed.insert_one(data)
-                n += 1
+                self.mongo.collection.insert_one(data)
+                insertion += 1
             logging.info(
-                "Inserted {}/{} documents for {}.".format(n, len(element), self.name))
+                "Inserted {}/{} documents for {}.".format(insertion, len(element), self.name))
         except Exception as e:
             logging.error(e)

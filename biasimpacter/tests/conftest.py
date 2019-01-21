@@ -1,6 +1,13 @@
 import pytest
+import sys
+import os
 from mock import patch, Mock, MagicMock
 
+sys.path.append(
+    os.path.join(
+        os.path.dirname(__file__),
+        '..',
+        'app'))
 
 def _mock_response(
         status=200,
@@ -30,3 +37,15 @@ def _mock_response(
             return_value=json_data
         )
     return mock_resp
+
+def _mock_mongo(
+        uri=None,
+        database=None,
+        collection=None,
+        build_index=None):
+    mock_mongo = Mock()
+    mock_collection = MagicMock()
+    mock_mongo.collection = mock_collection
+    mock_collection.insert_one = Mock()
+    return mock_mongo
+

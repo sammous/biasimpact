@@ -1,5 +1,5 @@
-from .dataprovider import Date, Validator, RSSReader, StoryRSS
-from .models import ModelRSS
+from dataprovider import Date, Validator, RSSReader, StoryRSS
+from models import ModelRSS
 from threading import Thread
 import logging
 import schedule
