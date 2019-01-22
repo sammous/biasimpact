@@ -127,7 +127,6 @@ class RSSReader(Validator, Date, ElementsXML):
         Format RSS feed and extract items and its information.
         """
         try:
-            print(url)
             page = requests.get(url, headers=self.header)
             soup = BeautifulSoup(page.text, "xml")
         except requests.exceptions.RequestException as e:
@@ -184,7 +183,13 @@ class StoryRSS(RSSReader):
                     "date_parsed": datetime.datetime.utcnow(),
                     "media": self.name,
                 }
-                self.mongo.collection.insert_one(data)
+                self.mongo.collection.update_one(
+                    {
+                        "link": str(link),
+                    },
+                    {"$set": data},
+                    upsert=True
+                )
                 insertion += 1
             logging.info(
                 "Inserted {}/{} documents for {}.".format(insertion, len(element), self.name))

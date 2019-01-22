@@ -1,9 +1,9 @@
 import pytest
 import datetime
 import os
-from app.app import Date, Validator, RSSReader
+from app.app import Date, Validator, RSSReader, StoryRSS
 from mock import patch
-from .conftest import _mock_response
+from .conftest import _mock_response, _mock_mongo
 from bs4 import BeautifulSoup
 
 @pytest.fixture
@@ -17,9 +17,8 @@ def soup(rss_feed):
     yield BeautifulSoup(rss_feed, "xml")
 
 @pytest.fixture
-@patch('app.app.logging')
-def rss_reader(mock_logging):
-    return RSSReader(mock_logging)
+def rss_reader():
+    return RSSReader()
 
 @pytest.fixture
 def items(soup, rss_reader):
@@ -31,13 +30,11 @@ def test_date():
 def test_validator():
     assert Validator
 
-
-@patch('app.app.logging')
 @patch('app.dataprovider.requests.get')
-def test_rssreader(_mock_get, mock_logging, rss_feed):
+def test_rssreader(_mock_get, rss_feed):
     mock_resp = _mock_response(content=rss_feed)
     _mock_get.return_value = mock_resp
-    rss_reader = RSSReader(mock_logging)
+    rss_reader = RSSReader()
     soup = BeautifulSoup(rss_feed, "xml")
     assert rss_reader.get_xml_feed("test_url")["soup"] == soup
 
@@ -49,3 +46,16 @@ def test_coherent_rss_reader(soup, items, rss_reader):
     desc = rss_reader._get_desc(items, rss_reader.items_desc)
 
     assert len(items) == len(dates) == len(links) == len(titles) == len(desc) == 43
+
+
+@patch('app.dataprovider.RSSReader.get_xml_feed')
+@patch('app.models.ModelRSS')
+@patch('app.dataprovider.requests.get')
+def test_storyrss(_mock_get, _mock_mongo, xml_feed, rss_reader, rss_feed):
+    mock_resp = _mock_response(content=rss_feed)
+    _mock_get.return_value = mock_resp
+    xml_feed.return_value = rss_reader.get_xml_feed("http://test.com")
+    story = StoryRSS("test_media", "http://test.com", _mock_mongo)
+    story.save_story()
+    assert _mock_mongo.build_index.called_once
+    assert _mock_mongo.collection.update_one.call_count == 43
