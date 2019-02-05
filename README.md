@@ -33,7 +33,9 @@ APP_MONGO_PASS=**********
 
 BIASIMPACTER_OUTPUT=biasimpacter_output.log
 BIASIMPACTER_DC_MONGO_HOST=mongo
+...
 ```
+Check the file `.env.example`.
 
 A cronjob is created to trigger daily scraping. It can be seen in the file `biasimpacter/crontab.sh`.
 
