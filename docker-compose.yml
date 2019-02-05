@@ -23,7 +23,7 @@ services:
     container_name: biasimpacter
     build:
       context: ./biasimpacter
-    depends_on: 
+    depends_on:
       - mongo
     volumes:
       - .:/biasimpacter
@@ -31,26 +31,27 @@ services:
     entrypoint: sh /biasimpacter/biasimpacter/crontab.sh
 
   prometheus:
-      image: prom/prometheus:latest
-      container_name: monitoring_prometheus
-      restart: unless-stopped
-      volumes:
-        - ./data/prometheus/config:/etc/prometheus/
-        - ./data/prometheus/data:/prometheus
-      command:
-        - '-config.file=/etc/prometheus/prometheus.yml'
-        - '-storage.local.path=/prometheus'
-        - '-alertmanager.url=http://alertmanager:9093'
-      expose:
-        - 9090
-      ports:
-        - 9090:9090
-      links:
-        - cadvisor:cadvisor
-        - node-exporter:node-exporter
+    image: prom/prometheus:latest
+    user: root
+    container_name: monitoring_prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/config:/etc/prometheus/
+      - ./prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    expose:
+      - 9090
+    ports:
+      - 9090:9090
+    links:
+      - cadvisor:cadvisor
+      - node-exporter:node-exporter
 
   node-exporter:
     image: prom/node-exporter:latest
+    user: root
     container_name: monitoring_node_exporter
     restart: unless-stopped
     expose:
@@ -60,6 +61,7 @@ services:
     image: google/cadvisor:latest
     container_name: monitoring_cadvisor
     restart: unless-stopped
+    user: root
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -70,6 +72,7 @@ services:
 
   grafana:
     env_file: .env
+    user: root
     image: grafana/grafana:latest
     container_name: monitoring_grafana
     restart: unless-stopped
@@ -77,4 +80,5 @@ services:
       - prometheus:prometheus
     volumes:
       - ./data/grafana:/var/lib/grafana
-    
+    ports:
+      - "3000:3000"
