@@ -43,7 +43,3 @@ A cronjob is created to trigger daily scraping. It can be seen in the file `bias
 
 The dataprovider is composed by the `RSSReader` and the `StoryRSS`.
 The `RSSReader` reads rss feeds and the `StoryRSS` aggregates the feeds to save it in a database.
-
-## BiasImpacted 
-
-Frond end of the BiasImpact application
