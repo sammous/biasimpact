@@ -6,3 +6,4 @@ lxml
 schedule
 python-dateutil
 pymongo
+pytest
