@@ -1,0 +1,15 @@
+20minutes_fr, https://www.20minutes.fr/feeds/rss-une.xml
+atlantico_fr, http://www.atlantico.fr/rss.xml
+bastamag_fr, https://www.bastamag.net/spip.php?page=backend
+bfmtv_fr, http://www.bfmtv.com/rss/info/flux-rss/flux-toutes-les-actualites/
+capital_fr, https://feed.prismamediadigital.com/v1/cap/rss?sources=capital,polemik,xerfi,capital-avec-agence-france-presse,capital-avec-aof,capital-avec-reuters,capital-avec-optimaretraite
+challenges_fr, https://www.challenges.fr/rss.xml
+contexte_fr, https://www.contexte.com/articles/rss
+courrier_international_fr, https://www.courrierinternational.com/feed/all/rss.xml
+dna_fr, http://www.dna.fr/rss
+europe1_fr, http://www.europe1.fr/var/export/rss/europe1/actus.xml
+francebleu_fr, https://www.francebleu.fr/rss/infos.xml
+franceculture_fr, https://www.franceculture.fr/rss
+franceinter_fr, https://www.franceinter.fr/rss/a-la-une.xml
+francetvinfo_fr, https://www.francetvinfo.fr/titres.rss
+huffingtonpost_fr, http://www.huffingtonpost.fr/feeds/index.xml
