@@ -39,6 +39,10 @@ Check the file `.env.example`.
 
 A cronjob is created to trigger daily scraping. It can be seen in the file `biasimpacter/crontab.sh`.
 
+#### Source file
+
+`source.txt` is the source file read to get RSS feeds with the following format : "*media_region*, *url_feed*" for each line.
+
 #### Dataprovider
 
 The dataprovider is composed by the `RSSReader` and the `StoryRSS`.
