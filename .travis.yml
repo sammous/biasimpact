@@ -15,7 +15,7 @@ after_script:
 deploy:
   skip_cleanup: true
   provider: script
-  script: bash deploy.sh
+  script: bash ${TRAVIS_BUILD_DIR}/deploy.sh
   on:
     branch: master
 
