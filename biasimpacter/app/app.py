@@ -32,7 +32,7 @@ def read_source(datapath=os.path.join(os.path.dirname(os.path.dirname(__file__))
     with open(datapath, 'r') as f:
         return [line.rstrip().split(", ") for line in f]
 
-if __name__ == "__main__":
+def main():
     uri = set_up_mongo()
     mongo_rss = ModelRSS(uri)
     urls = read_source()
@@ -43,3 +43,7 @@ if __name__ == "__main__":
             story.save_story()
         except Exception as e:
             logging.error(e)
+
+
+if __name__ == "__main__":
+    main()
