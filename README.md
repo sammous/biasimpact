@@ -1,4 +1,4 @@
-# Bias Impact 
+# Bias Impact [![Build Status](https://travis-ci.org/sammous/biasimpact.svg?branch=master)](https://travis-ci.org/sammous/biasimpact)
 
 ## BiasImpacter
 
