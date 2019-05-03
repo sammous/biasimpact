@@ -6,6 +6,7 @@
   json.overwrite_keys: true
   close_inactive: 24h
   close_renamed: true
+  containers.ids: '*'
   pipeline: docker
   processors:
   - add_docker_metadata: ~
