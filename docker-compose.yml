@@ -91,6 +91,7 @@ services:
       - "5044:5044"
     environment:
       - ES_CONNECT_RETRY=90
+    restart: on-failure
 
         #Filebeat container
   filebeat:
