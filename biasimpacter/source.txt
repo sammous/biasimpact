@@ -71,6 +71,7 @@ straitstimes_asia, https://www.straitstimes.com/news/asia/rss.xml
 theindepend_sg, http://theindependent.sg/feed/
 businesstimesTopStories_sg, https://www.businesstimes.com.sg/rss/top-stories
 todayonline_sg, https://www.todayonline.com/feed/singapore
+mothership_sg, https://mothership.sg/feed
 asiaone_sg, https://www.asiaone.com/rss-feed/2
 asiaone_asia, https://www.asiaone.com/rss-feed/4
 asiaone_global, https://www.asiaone.com/rss-feed/5
