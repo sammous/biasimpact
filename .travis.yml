@@ -3,17 +3,16 @@ cache: pip
 python:
 - 3.6.5
 before_install:
-- openssl aes-256-cbc -K $encrypted_382e802577bb_key -iv $encrypted_382e802577bb_iv
-  -in .travis/travis_rsa.enc -out .travis/travis_rsa -d
+- openssl aes-256-cbc -K $encrypted_131a1187e58f_key -iv $encrypted_131a1187e58f_iv
+  -in travis_rsa.enc -out .travis/travis_rsa -d
 - cd biasimpacter
 install:
 - pip install -r requirements.txt
-script: 
-  - pytest
+script:
+- pytest
 deploy:
   skip_cleanup: true
   provider: script
   script: bash ${TRAVIS_BUILD_DIR}/deploy.sh
   on:
     branch: master
-
